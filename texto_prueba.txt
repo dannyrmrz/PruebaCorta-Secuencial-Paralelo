@@ -1,0 +1,56 @@
+CONTEO DE FRECUENCIA DE PALABRAS - ARCHIVO DE PRUEBA
+Computacion Paralela y Distribuida, Practica Guiada 01
+
+La computadora procesa datos. La computadora almacena datos. La computadora
+tambien compara datos, y cuando la cantidad de datos crece, una sola computadora
+puede tardar demasiado en procesar todo el texto.
+
+Un algoritmo secuencial recorre el archivo caracter por caracter. Cada caracter
+se agrega a la palabra actual hasta que aparece un separador. Un separador puede
+ser un espacio, un salto de linea o un signo de puntuacion: puntos, comas, punto
+y coma; signos de interrogacion, guiones y parentesis. Cuando aparece un
+separador, la palabra actual se guarda en el diccionario. Si la palabra es nueva,
+se agrega con valor uno. Si la palabra ya existe, se le suma uno a su frecuencia.
+Despues, la palabra actual se reinicia y el algoritmo continua leyendo el
+siguiente caracter hasta llegar al final del archivo.
+
+El algoritmo paralelo hace exactamente lo mismo, pero reparte el trabajo. Primero
+divide el archivo en bloques, uno por cada proceso. Cada bloque debe terminar en
+un separador para que ninguna palabra quede partida entre dos bloques. Si una
+palabra quedara partida, los conteos serian incorrectos y las dos versiones no
+producirian el mismo resultado.
+
+Despues de dividir el archivo, el algoritmo paralelo crea los procesos. Cada
+proceso lee unicamente su bloque, construye su propio diccionario local y cuenta
+las palabras que encuentra. Como cada proceso trabaja sobre datos distintos y
+sobre un diccionario privado, no existe ninguna dependencia entre los procesos.
+Esa independencia es lo que permite el paralelismo.
+
+Cuando todos los procesos terminan, el algoritmo espera en una barrera de
+sincronizacion. La barrera garantiza que ningun diccionario local se lea antes de
+estar completo. Sin esa barrera aparecerian condiciones de carrera y el conteo
+final cambiaria de una ejecucion a otra.
+
+Al final se fusionan los diccionarios locales en un diccionario final. Para cada
+palabra de cada diccionario local, si la palabra ya existe en el diccionario
+final se suma su frecuencia local; si no existe, se agrega con la frecuencia que
+traia. El resultado de la fusion debe ser identico al resultado del algoritmo
+secuencial: las mismas palabras y las mismas frecuencias.
+
+Palabras repetidas para la prueba: paralelo paralelo paralelo secuencial
+secuencial bloque bloque bloque bloque proceso proceso proceso proceso proceso
+diccionario diccionario frecuencia frecuencia frecuencia palabra palabra palabra
+archivo archivo texto texto datos datos datos.
+
+Mayusculas y minusculas: TEXTO texto Texto TEXTO texto deben contarse como la
+misma palabra. Numeros y simbolos: 2026 2026 100 100 100 uno dos tres.
+
+Casos de frontera: una palabra al final de una linea
+y otra palabra al inicio de la siguiente linea. Espacios    multiples   entre
+palabras.   Signos    seguidos ... ;; !! ?? -- deben ignorarse como separadores.
+
+Este documento debe procesarse con la version secuencial y con la version
+paralela usando el mismo archivo, y ambas ejecuciones deben mostrar exactamente
+las mismas palabras con las mismas frecuencias.
+
+FIN DEL DOCUMENTO DE PRUEBA
