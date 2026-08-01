@@ -5,7 +5,6 @@ Daniela Ramirez (23053) - Bryan Martinez (23542) - Adriana Placios (23044)
 
 Implementacion del diagrama de flujo secuencial
 """
-
 import argparse
 import os
 import sys
