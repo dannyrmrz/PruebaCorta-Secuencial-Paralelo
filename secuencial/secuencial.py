@@ -11,39 +11,24 @@ import os
 import sys
 import time
 
+from utils.diccionarios import ordenar_por_frecuencia, registrar_palabra
+from utils.separadores import es_separador
+
 # Tamaño del buffer de lectura. El algoritmo sigue procesando caracter por
 # caracter; el buffer solo evita una llamada al sistema operativo por caracter.
 TAMANIO_BUFFER = 65536
 
-
-def es_separador(caracter):
-    """Devuelve True si el caracter NO forma parte de una palabra.
-
-    Separadores: espacios, saltos de linea, tabulaciones y cualquier signo de
-    puntuacion. Se consideran parte de una palabra las letras y los digitos.
-    """
-    return not caracter.isalnum()
-
-
-def registrar_palabra(libro_palabras, palabra):
-    """Decision '¿es nueva?' del diagrama, con sus dos ramas."""
-    if palabra in libro_palabras:          # la palabra NO es nueva
-        libro_palabras[palabra] += 1       # acceder a la llave y sumar 1
-    else:                                  # la palabra SI es nueva
-        libro_palabras[palabra] = 1        # agregar al diccionario con valor 1
-
-
 def contar_frecuencias(ruta_archivo):
     """Recorre el archivo caracter por caracter y devuelve palabra - frecuencia."""
-    libro_palabras = {}       # diccionario de frecuencias (salida del algoritmo)
-    palabra_actual = ""       # palabra que se esta construyendo
-    total_palabras = 0        # contador auxiliar para el resumen
+    libro_palabras = {}
+    palabra_actual = ""
+    total_palabras = 0
 
     with open(ruta_archivo, "r", encoding="utf-8", errors="replace") as archivo:
         while True:
             bloque = archivo.read(TAMANIO_BUFFER)
             if bloque == "":
-                break                       # ¿es EOF? -> SI
+                break
 
             for caracter_actual in bloque:
                 if es_separador(caracter_actual):
@@ -65,13 +50,6 @@ def contar_frecuencias(ruta_archivo):
         total_palabras += 1
 
     return libro_palabras, total_palabras
-
-
-def ordenar_resultados(libro_palabras):
-    """Orden determinista: frecuencia descendente y, a igual frecuencia, alfabetico.
-    Es necesario para poder comparar la salida con la de la version paralela.
-    """
-    return sorted(libro_palabras.items(), key=lambda par: (-par[1], par[0]))
 
 
 def formatear_resultados(resultados, total_palabras, duracion, limite=None):
@@ -118,7 +96,7 @@ def main():
         print("No se encontraron palabras en el archivo.")
         sys.exit(0)
 
-    resultados = ordenar_resultados(libro_palabras)
+    resultados = ordenar_por_frecuencia(libro_palabras)
     print(formatear_resultados(resultados, total_palabras, duracion, argumentos.top))
 
     if argumentos.salida:
@@ -129,6 +107,4 @@ def main():
                 salida.write("{}\t{}\n".format(palabra, frecuencia))
         print("\nResultado completo guardado en: {}".format(argumentos.salida))
 
-
-if __name__ == "__main__":
-    main()
+main()
