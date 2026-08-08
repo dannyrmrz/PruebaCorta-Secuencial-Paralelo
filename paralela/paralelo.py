@@ -69,15 +69,17 @@ def crear_argumentos() -> argparse.ArgumentParser:
 def main() -> int:
     """Ejecuta el flujo paralelo completo."""
     argumentos = crear_argumentos().parse_args()
+    inicio_total = time.perf_counter()
 
     try:
         texto = leer_archivo(argumentos.file, argumentos.encoding)
         bloques = dividir_en_bloques(texto, argumentos.procesos)
 
-        inicio = time.perf_counter()
+        inicio_conteo = time.perf_counter()
         diccionarios_locales = contar_palabras_paralelo(texto, bloques)
         resultado = fusionar_diccionarios(diccionarios_locales)
-        duracion = time.perf_counter() - inicio
+        tiempo_conteo = time.perf_counter() - inicio_conteo
+        tiempo_total = time.perf_counter() - inicio_total
 
         if not resultado:
             print("No se encontraron palabras en el archivo.")
@@ -85,7 +87,8 @@ def main() -> int:
             print(
                 formatear_resultados(
                     resultado,
-                    duracion,
+                    tiempo_conteo,
+                    tiempo_total,
                     len(bloques),
                     argumentos.top,
                 )

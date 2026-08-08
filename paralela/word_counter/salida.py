@@ -22,7 +22,8 @@ def fusionar_diccionarios(
 
 def formatear_resultados(
     diccionario: dict[str, int],
-    duracion: float,
+    tiempo_conteo: float,
+    tiempo_total: float,
     procesos_utilizados: int,
     limite: int | None = None,
 ) -> str:
@@ -47,7 +48,8 @@ def formatear_resultados(
         f"Palabras totales encontradas : {sum(diccionario.values())}",
         f"Palabras únicas encontradas  : {len(diccionario)}",
         f"Procesos utilizados          : {procesos_utilizados}",
-        f"Tiempo de ejecución          : {duracion:.4f} s",
+        f"Tiempo de conteo             : {tiempo_conteo:.6f} s",
+        f"Tiempo total                 : {tiempo_total:.6f} s",
     ])
 
     return "\n".join(lineas)
