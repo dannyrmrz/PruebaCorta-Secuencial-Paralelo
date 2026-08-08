@@ -1,5 +1,9 @@
 # Conteo de frecuencia de palabras
 
+## Video de Explicación
+
+https://youtu.be/SmI1zYr-pL4
+
 ## Estructura del proyecto
 
 ### `secuencial/`
